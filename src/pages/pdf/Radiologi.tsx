@@ -125,7 +125,7 @@ for (const line of textLines) {
       startY += boxHeight + 10; 
      const qrSize = 25;
 const qrMargin = 60; // jarak antar QR
-const bottomY = 140; // posisi vertikal (atur sesuai panjang dokumen)
+const bottomY = 144; // posisi vertikal (atur sesuai panjang dokumen)
 
 // teks QR
 const qrText1 = "https://example.com/verifikasi/penanggung-jawab";

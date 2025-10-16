@@ -8,46 +8,59 @@ export const generateBilling = (): Promise<string> => {
 
     img.onload = () => {
       const pageWidth = doc.internal.pageSize.getWidth();
-      const leftX = 14;
+      const margin = 10;
+      const leftX = 10;
       const colonX = 50;
       const rightX = pageWidth - 20;
-      let y = 16;
+      const centerX = pageWidth / 2;
+      let y = 8;
       const lineHeight = 4;
 
-      // --- HEADER ---
-      doc.addImage(img, "PNG", 15, 10, 15, 15);
-      doc.setFont("helvetica", "bold");
+      // === HEADER RUMAH SAKIT ===
+      doc.addImage(img, "PNG", margin, y - 4, 15, 15);
+
+      doc.setFont("helvetica");
       doc.setFontSize(10);
-      doc.text("RSU Fastabiq Sehat PKU Muhammadiyah", pageWidth / 2, y, { align: "center" });
+      doc.text("RSU Fastabiq Sehat PKU Muhammadiyah", centerX, y, { align: "center" });
 
       doc.setFont("helvetica", "normal");
-      doc.setFontSize(7);
-      y += 3;
-      doc.text("Jl. Pati - Tayu Km. 03, Tambaharjo, Kec. Pati, Pati, Jawa Tengah", pageWidth / 2, y, { align: "center" });
-      y += 3;
-      doc.text("(0295) 4199008, Fax (0295) 4101177 | Email: rsfastabiqsehat@gmail.com", pageWidth / 2, y, {
+      doc.setFontSize(8);
+      y += 4;
+      doc.text("Jl. Pati - Tayu Km. 03, Tambaharjo, Kec. Pati, Pati, Jawa Tengah", centerX, y, {
         align: "center",
       });
-      y += 3;
-      doc.setLineWidth(0.3);
-      doc.line(10, y, pageWidth - 10, y);
-      y += 5;
+      y += 4;
+      doc.text("(0295) 4199008, Fax (0295) 4101177", centerX, y, {
+        align: "center",
+      });
+      y += 4;
+      doc.text("Email: rsfastabiqsehat@gmail.com", centerX, y, {
+        align: "center",
+      });
 
-      // --- DATA PASIEN ---
+      // Garis pembatas bawah header
+      y += 4;
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.2);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 6;
+
+      // === DATA PASIEN ===
       const drawLabelValue = (label: string, value: string | number) => {
         doc.text(label, leftX, y);
-        doc.text(`: ${value}`, colonX, y);
+        doc.text(":", colonX, y);
+        doc.text(`${value}`, colonX + 3, y);
         y += lineHeight;
       };
 
-      doc.setFontSize(7);
+      doc.setFontSize(8);
       const data = {
         noNota: "21323123213",
         bangsal: "310 Rawat Inap",
         tglPerawatan: "19 September 2025",
         noRM: "029343",
         namaPasien: "Candara Putri",
-        alamat: "Ds Mulyoharjo",
+        alamat: "Ds. Mulyoharjo",
         dokter: ["dr. Imron", "dr. Yuniarsih"],
         registrasi: 15000,
         ruang: [
@@ -98,6 +111,7 @@ export const generateBilling = (): Promise<string> => {
         ],
       };
 
+      // --- Pasien info ---
       drawLabelValue("No. Nota", data.noNota);
       drawLabelValue("Bangsal/Kamar", data.bangsal);
       drawLabelValue("Tgl. Perawatan", data.tglPerawatan);
@@ -110,25 +124,26 @@ export const generateBilling = (): Promise<string> => {
       doc.text(":", colonX, y);
       y += lineHeight;
       data.dokter.forEach((d) => {
-        doc.text(`- ${d}`, colonX + 2, y);
+        doc.text(`- ${d}`, colonX + 3, y);
         y += lineHeight;
       });
 
       // Registrasi
-      doc.text("Registrasi", leftX, y);
+         doc.text("Registrasi", leftX, y);
       doc.text(":", colonX, y);
       doc.text(`Rp ${data.registrasi.toLocaleString("id-ID")}`, rightX, y, { align: "right" });
       y += lineHeight + 1;
 
-      // Ruang
-      doc.setFont("helvetica", "bold");
-      doc.text("Ruang :", leftX, y);
+      // --- Ruang ---
+      doc.setFont("helvetica");
+      doc.text("Ruang ", leftX, y);
+      doc.text(":", colonX, y);
       y += lineHeight;
       doc.setFont("helvetica", "normal");
 
       data.ruang.forEach((r) => {
         if (r.nama) {
-          doc.text(r.nama, colonX + 2, y);
+          doc.text(r.nama, colonX + 3, y);
           doc.text(`Rp ${r.biaya?.toLocaleString("id-ID") ?? ""}`, rightX - 30, y, { align: "right" });
           doc.text("2", rightX - 15, y, { align: "right" });
           doc.text(`Rp ${r.subtotal?.toLocaleString("id-ID") ?? ""}`, rightX, y, { align: "right" });
@@ -136,77 +151,71 @@ export const generateBilling = (): Promise<string> => {
         }
       });
 
-      doc.setFont("helvetica", "bold");
-      doc.text(`Total Kamar : Rp ${data.ruang[1].subtotal.toLocaleString("id-ID")}`, colonX + 2, y);
+      doc.setFont("helvetica");
+      doc.text(`Total Kamar : Rp ${data.ruang[1].subtotal.toLocaleString("id-ID")}`, colonX + 3, y);
       y += 5;
 
       // --- RINCIAN BIAYA ---
       let totalKeseluruhan = 0;
-      doc.setFontSize(7);
+      doc.setFontSize(8);
       data.rincianBiaya.forEach((kategori) => {
-        doc.setFont("helvetica", "bold");
-        doc.text(`${kategori.kategori} :`, leftX, y);
-        y += lineHeight - 1;
+        doc.setFont("helvetica");
+        doc.text(":", colonX, y);
+        doc.text(`${kategori.kategori} `, leftX, y);
+        y += lineHeight;
         doc.setFont("helvetica", "normal");
 
         kategori.items.forEach((item) => {
-          doc.text(item.nama, colonX + 2, y);
+          doc.text(item.nama, colonX + 3, y);
           doc.text(`Rp ${item.harga.toLocaleString("id-ID")}`, rightX - 30, y, { align: "right" });
           doc.text(`${item.jumlah}`, rightX - 15, y, { align: "right" });
           doc.text(`Rp ${item.subtotal.toLocaleString("id-ID")}`, rightX, y, { align: "right" });
           y += lineHeight - 1;
         });
 
-        doc.setFont("helvetica", "bold");
-        doc.text(`Total ${kategori.kategori} : Rp ${kategori.total.toLocaleString("id-ID")}`, colonX + 2, y);
+        doc.setFont("helvetica");
+        doc.text(`Total ${kategori.kategori} : Rp ${kategori.total.toLocaleString("id-ID")}`, colonX + 3, y);
         y += 4;
         totalKeseluruhan += kategori.total;
       });
 
- // --- TOTAL & TAMBAHAN ---
-y += 4;
-doc.setFontSize(8);
-doc.setFont("helvetica", "bold");
-doc.text(`TOTAL KESELURUHAN : Rp ${totalKeseluruhan.toLocaleString("id-ID")}`, rightX, y, { align: "right" });
-y += 6;
+      const tambahan = {
+        resepPulang: 0,
+        tambahanBiaya: 0,
+        potonganBiaya: 0,
+        jasaService: 0,
+        total: totalKeseluruhan,
+      };
 
-const tambahan = {
-  resepPulang: 0,
-  tambahanBiaya: 0,
-  potonganBiaya: 0,
-  jasaService: 0,
-  total: totalKeseluruhan,
-};
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      const drawTambahan = (label: string, value: number) => {
+        doc.text(label, leftX, y);
+        doc.text(":", colonX, y);
 
-doc.setFont("helvetica", "normal");
-doc.setFontSize(7);
+        if (value !== 0) {
+          doc.text(`Rp ${value.toLocaleString("id-ID")}`, rightX, y, { align: "right" });
+        }
 
-const labelX = leftX;
-const valueX = rightX;
-
-const drawTambahan = (label: string, value: number) => {
-  doc.text(label, labelX, y);
-  doc.text(":", colonX, y);
-  doc.text(`Rp ${value.toLocaleString("id-ID")}`, valueX, y, { align: "right" });
-  y += lineHeight;
-};
-
-drawTambahan("Resep Pulang", tambahan.resepPulang);
-drawTambahan("Tambahan Biaya", tambahan.tambahanBiaya);
-drawTambahan("Potongan Biaya", tambahan.potonganBiaya);
-drawTambahan("Jasa Service", tambahan.jasaService);
-
-y += 2;
-doc.setFont("helvetica", "bold");
-doc.setFontSize(9);
-doc.text("TOTAL", colonX, y);
-doc.text(`Rp ${tambahan.total.toLocaleString("id-ID")}`, valueX, y, { align: "right" });
+        y += lineHeight;
+      };
 
 
+      drawTambahan("Resep Pulang", tambahan.resepPulang);
+      drawTambahan("Tambahan Biaya", tambahan.tambahanBiaya);
+      drawTambahan("Potongan Biaya", tambahan.potonganBiaya);
+      drawTambahan("Jasa Service", tambahan.jasaService);
+      y += 2;
+      doc.setFont("helvetica");
+      doc.setFontSize(9);
+      doc.text("Total", leftX, y);
+      doc.text(":", colonX, y);
+      doc.text(`Rp ${totalKeseluruhan.toLocaleString("id-ID")}`, rightX, y, { align: "right" });
+      // === OUTPUT ===
       const blob = doc.output("blob");
       resolve(URL.createObjectURL(blob));
     };
 
-    img.onerror = () => resolve(URL.createObjectURL(doc.output("blob")));
+    img.onerror = () => resolve(URL.createObjectURL(new jsPDF().output("blob")));
   });
 };

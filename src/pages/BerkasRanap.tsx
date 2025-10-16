@@ -10,6 +10,7 @@ import { generateBilling } from "./pdf/Billing";
 import { generateResumeRanap } from "./pdf/Resume-ranap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { generateCpptRanap } from "./pdf/CpptRanap";
 
 export interface Pasien {
   claim_id?: number | null;
@@ -183,6 +184,17 @@ const BerkasRanap: React.FC = () => {
             }}
           >
             RADIOLOGI
+          </button>
+            <button
+            className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "CPPTRANAP" ? "bg-blue-500 text-white" : ""
+              }`}
+            onClick={async () => {
+              const url = await generateCpptRanap();
+              setPdfUrl(url);
+              setActivePdf("CPPTRANAP");
+            }}
+          >
+            CPPT RANAP
           </button>
 
           <button

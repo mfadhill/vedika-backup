@@ -14,7 +14,7 @@ export const generateSPRI = async (): Promise<string> => {
   });
 
   
-doc.addImage(img, "PNG", 6, 10, 50, 10);
+doc.addImage(img, "PNG", 6, 10, 45, 8);
 
 
 // Judul tengah
