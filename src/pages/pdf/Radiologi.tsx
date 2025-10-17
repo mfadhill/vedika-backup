@@ -6,7 +6,6 @@ export const generateRadiologi = async (): Promise<string> => {
   const img = new Image();
   img.src = "/logo-rs.png"; 
 
-  // contoh dummy data
   const regPeriksa = {
     no_rkm_medis: "123456",
     pasien: {

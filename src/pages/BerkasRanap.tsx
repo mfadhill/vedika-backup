@@ -11,6 +11,8 @@ import { generateResumeRanap } from "./pdf/Resume-ranap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { generateCpptRanap } from "./pdf/CpptRanap";
+import { generateTindakanMedis } from "./pdf/LaporanTindakanMedis";
+import { generateLaporanOperasi } from "./pdf/LaporanOperasi";
 
 export interface Pasien {
   claim_id?: number | null;
@@ -37,7 +39,7 @@ const BerkasRanap: React.FC = () => {
   const { no_rawat } = useParams<{ no_rawat: string }>();
   const [pasien, setPasien] = useState<Pasien | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" |"RADIOLOGI" |  null>(null);
+  const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" |"RADIOLOGI" | "CPPTRANAP" | "TINDAKANMEDIS" | "LAPORANOPERASI"| null>(null);
 
   const getData = async () => {
     if (!no_rawat) return;
@@ -173,6 +175,17 @@ const BerkasRanap: React.FC = () => {
           >
             LABORATORIUM
           </button>
+          <button
+            className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "LAPORANOPERASI" ? "bg-blue-500 text-white" : ""
+              }`}
+            onClick={async () => {
+              const url = await generateLaporanOperasi();
+              setPdfUrl(url);
+              setActivePdf("LAPORANOPERASI");
+            }}
+          >
+            LAPORAN OPERASI
+          </button>
 
            <button
             className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "RADIOLOGI" ? "bg-blue-500 text-white" : ""
@@ -217,6 +230,17 @@ const BerkasRanap: React.FC = () => {
             }}
           >
             BILLING
+          </button>
+              <button
+            className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "TINDAKANMEDIS" ? "bg-blue-500 text-white" : ""
+              }`}
+            onClick={ async () => {
+                 const url = await generateTindakanMedis();
+              setPdfUrl((url));
+              setActivePdf("TINDAKANMEDIS");
+            }}
+          >
+          LAPORAN TINDAKAN MEDIS
           </button>
 
           <button

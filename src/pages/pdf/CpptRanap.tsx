@@ -11,7 +11,7 @@ const dokter = {
   nama: "dr. Ahmad Sulaiman",
 };
 
-// 🧠 Contoh data dummy catatan pasien (nanti bisa ganti dari API)
+
 const catatanList = [
   {
     tanggal: "14-10-2025",
