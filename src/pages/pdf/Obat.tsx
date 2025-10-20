@@ -1,7 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-// Format angka ke Rupiah
 const formatRupiah = (angka: number): string => {
   return "Rp" + angka.toLocaleString("id-ID");
 };
