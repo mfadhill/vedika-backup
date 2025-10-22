@@ -3,7 +3,7 @@ import jsPDF from "jspdf";
 export const generateHASILLAB = (): Promise<string> => {
   const doc = new jsPDF();
   const img = new Image();
-  img.src = "/logo-rs.png"; // pastikan file ini ada di /public
+  img.src = "/logo-rs.png";
 
   // contoh dummy data
   const regPeriksa = {

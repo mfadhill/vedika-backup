@@ -171,7 +171,7 @@ async function drawRowWithQR(
         ["No. RM", d.pasien.noRm],
         ["Nama", d.pasien.nama],
         ["Tgl. Lahir", d.pasien.tglLahir],
-        ["JK", d.pasien.jk === "L" ? "Laki-laki" : "Perempuan"],
+        ["Jenis Kelamin", d.pasien.jk === "L" ? "Laki-laki" : "Perempuan"],
       ];
 
       dataPasien.forEach(([label, value], i) => {

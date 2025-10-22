@@ -13,6 +13,7 @@ import axios from "axios";
 import { generateCpptRanap } from "./pdf/CpptRanap";
 import { generateTindakanMedis } from "./pdf/LaporanTindakanMedis";
 import { generateLaporanOperasi } from "./pdf/LaporanOperasi";
+import { generateAsesmen } from "./pdf/Asesmen";
 
 export interface Pasien {
   claim_id?: number | null;
@@ -39,7 +40,7 @@ const BerkasRanap: React.FC = () => {
   const { no_rawat } = useParams<{ no_rawat: string }>();
   const [pasien, setPasien] = useState<Pasien | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" |"RADIOLOGI" | "CPPTRANAP" | "TINDAKANMEDIS" | "LAPORANOPERASI"| null>(null);
+  const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" | "ASESMEN" |"TRIASE" | "RESUME" | "HASILLAB" | "SPRI" |"RADIOLOGI" | "CPPTRANAP" | "TINDAKANMEDIS" | "LAPORANOPERASI"| null>(null);
 
   const getData = async () => {
     if (!no_rawat) return;
@@ -230,6 +231,17 @@ const BerkasRanap: React.FC = () => {
             }}
           >
             BILLING
+          </button>
+            <button
+            className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "ASESMEN" ? "bg-blue-500 text-white" : ""
+              }`}
+            onClick={ async () => {
+                 const url = await generateAsesmen();
+              setPdfUrl((url));
+              setActivePdf("ASESMEN");
+            }}
+          >
+            ASESMEN AWAL MEDIS
           </button>
               <button
             className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "TINDAKANMEDIS" ? "bg-blue-500 text-white" : ""
