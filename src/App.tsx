@@ -13,6 +13,7 @@ import DaftarPasien from "./pages/DaftarPasien";
 import KlaimRalanPage from "./components/pasien/KlaimRalan";
 import KlaimRanapPage from "./components/pasien/KlaimRanap";
 import Login from "./pages/auth/login";
+import BerkasRalan from "./pages/BerkasRalan";
 
 function AppLayout() {
   const location = useLocation();
@@ -35,6 +36,8 @@ function AppLayout() {
           <Route path="/ralan/klaim/:no_rawat" element={<KlaimRalanPage />} />
           <Route path="/ranap/klaim/:no_rawat" element={<KlaimRanapPage />} />
           <Route path="/ranap/berkas/:no_rawat" element={<BerkasRanap />} />
+          <Route path="/ralan/berkas/:no_rawat" element={<BerkasRalan />} />
+
         </Routes>
       </div>
     </div>

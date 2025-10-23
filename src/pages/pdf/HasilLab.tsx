@@ -69,11 +69,9 @@ export const generateHASILLAB = (): Promise<string> => {
       doc.line(10, y + 3, pageWidth - 10, y + 3);
 
 
-      // === Judul PDF ===
       doc.setFontSize(12);
       doc.text("HASIL PEMERIKSAAN LABORATORIUM", 105, 38, { align: "center" });
 
-      // === Info Pasien ===
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
 

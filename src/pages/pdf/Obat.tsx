@@ -18,7 +18,7 @@ export const generateOBAT = (): string => {
 
   doc.setFontSize(13);
   doc.text("OBAT", 105, 43, { align: "center" });
-  doc.line(10, 48, 200, 45);
+  doc.line(10, 45, 200, 45);
 
   const rawData = [
     { tanggal: "08-10-2025 08:00", nama: "Paracetamol 500mg", harga: 1500, qty: 10 },
@@ -50,7 +50,7 @@ export const generateOBAT = (): string => {
   );
 
 autoTable(doc, {
-  startY: 55,
+  startY: 50,
   theme: "grid",
   margin: { left: 10, right: 10 },
   tableWidth: 190,                

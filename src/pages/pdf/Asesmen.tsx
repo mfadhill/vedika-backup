@@ -8,11 +8,11 @@ export const generateAsesmen = async (): Promise<string> => {
 
   return new Promise((resolve) => {
     img.onload = () => {
-      // === Header Rumah Sakit ===
       doc.addImage(img, "PNG", 15, 5, 18, 18);
 
       doc.setFont("helvetica", "bold");
       doc.setFontSize(13);
+      const marginX = 4;
 
       const pageWidth = doc.internal.pageSize.getWidth();
       const textXCenter = pageWidth / 2;
@@ -29,24 +29,21 @@ export const generateAsesmen = async (): Promise<string> => {
       y += 4;
       doc.text("E-mail: rsfastabiqsehat@gmail.com", textXCenter, y, { align: "center" });
 
-      // === Garis bawah header ===
       doc.setDrawColor(0);
       doc.setLineWidth(0.3);
-      doc.line(10, y + 3, pageWidth - 10, y + 3);
+      doc.line(4, y + 3, pageWidth - 4, y + 3);
 
-      // === Table Body ===
-      const marginX = 4;
       const tableWidth = pageWidth - marginX * 2;
       const col1Width = tableWidth * 0.6;
-      const rowHeight1 = 10; // judul
-      const rowHeight2 = 25; // data pasien
-      const rowHeight3 = 8;  // I. Riwayat Kesehatan
-      const rowHeight4 = 10; // Keluhan Utama
-      const rowHeight5 = 16; // Riwayat Penyakit Sekarang
-      const rowHeight6 = 10; // Riwayat Dahulu & Keluarga
-      const rowHeight7 = 10; // Riwayat Pengobatan & Alergi
-      const rowHeight8 = 8;  // II. Pemeriksaan Fisik (judul)
-      const rowHeight9 = 8;  // Keadaan Umum / Kesadaran / GCS
+      const rowHeight1 = 10;
+      const rowHeight2 = 25;
+      const rowHeight3 = 8; 
+      const rowHeight4 = 10; 
+      const rowHeight5 = 16; 
+      const rowHeight6 = 10;
+      const rowHeight7 = 10; 
+      const rowHeight8 = 8;  
+      const rowHeight9 = 8;  
       const rowHeight10 = 8;
       const totalHeight =
         rowHeight1 +
@@ -61,7 +58,6 @@ export const generateAsesmen = async (): Promise<string> => {
         rowHeight10 ;
       const startY = y + 8;
 
-      // === Kotak luar total ===
       doc.rect(marginX, startY, tableWidth, totalHeight);
 
       let currentY = startY + rowHeight1;
@@ -143,7 +139,6 @@ export const generateAsesmen = async (): Promise<string> => {
       doc.text("Anamnesis", rightXLabel, rightY);
       doc.text(": Autoanamnesis ()", rightXValue, rightY);
 
-      // === I. RIWAYAT KESEHATAN ===
       const riwayatHeaderY = startY + rowHeight1 + rowHeight2 + 6;
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9);
@@ -176,7 +171,6 @@ export const generateAsesmen = async (): Promise<string> => {
       doc.text("Riwayat Alergi", marginX + halfWidth + 3, row7Y);
       doc.text(": -", marginX + halfWidth + 30, row7Y);
 
-      // === II. PEMERIKSAAN FISIK ===
       const pemeriksaanY =
         startY +
         rowHeight1 +
@@ -192,7 +186,6 @@ export const generateAsesmen = async (): Promise<string> => {
       doc.setFontSize(9);
       doc.text("II. PEMERIKSAAN FISIK", marginX +3, pemeriksaanY);
 
-      // === Baris baru (3 kolom) ===
       const kondisiY = pemeriksaanY + rowHeight8;
       const colWidth = tableWidth / 3;
 
@@ -258,10 +251,9 @@ const detailValueY = labTextY + 4;
 doc.text(wrappedDetail, labTextX, detailValueY);
 
 /// === III. STATUS LOKALIS ===
-const statusLokalisY3 = detailY + totalDetailHeight; // Lanjutan langsung dari tabel II
-const rowStatusLokalisHeight = 8; // Tinggi baris judul
+const statusLokalisY3 = detailY + totalDetailHeight;
+const rowStatusLokalisHeight = 8;
 
-// Garis atas (nyambung dari tabel sebelumnya sudah ada)
 doc.line(marginX, statusLokalisY3, marginX + tableWidth, statusLokalisY3);
 
 // Isi teks judul
@@ -269,11 +261,9 @@ doc.setFont("helvetica", "normal");
 doc.setFontSize(9);
 doc.text("III. STATUS LOKALIS", marginX + 3, statusLokalisY3 + 6);
 
-// Garis bawah judul
 const keteranganY = statusLokalisY3 + rowStatusLokalisHeight;
 doc.line(marginX, keteranganY, marginX + tableWidth, keteranganY);
 
-// === Baris KETERANGAN ===
 const rowKeteranganHeight = 10;
 const keteranganTextY = keteranganY + 6;
 doc.text(
@@ -282,69 +272,65 @@ doc.text(
   keteranganTextY
 );
 
-// Garis bawah keterangan
 const keteranganBottomY = keteranganY + rowKeteranganHeight;
 doc.line(marginX, keteranganBottomY, marginX + tableWidth, keteranganBottomY);
 
-// === Border kiri-kanan untuk area status & keterangan ===
-doc.line(marginX, statusLokalisY3, marginX, keteranganBottomY); // kiri
-doc.line(marginX + tableWidth, statusLokalisY3, marginX + tableWidth, keteranganBottomY); // kanan
+doc.line(marginX, statusLokalisY3, marginX, keteranganBottomY);
+doc.line(marginX + tableWidth, statusLokalisY3, marginX + tableWidth, keteranganBottomY);
 
-// === IV. PEMERIKSAAN PENUNJANG ===
-const pemeriksaanPenunjangY = keteranganBottomY; // langsung nyambung dari bawah III
-const rowIVHeaderHeight = 8; // tinggi baris judul
+const pemeriksaanPenunjangY = keteranganBottomY;
+const rowIVHeaderHeight = 8;
 
-// Garis atas (sudah nyambung dari bawah III)
 doc.line(marginX, pemeriksaanPenunjangY, marginX + tableWidth, pemeriksaanPenunjangY);
 
-// Teks judul IV
+
 doc.setFont("helvetica", "normal");
 doc.setFontSize(9);
 doc.text("IV. PEMERIKSAAN PENUNJANG", marginX + 3, pemeriksaanPenunjangY + 6);
 
-// Garis bawah untuk baris judul IV
+
 const ivContentY = pemeriksaanPenunjangY + rowIVHeaderHeight;
 doc.line(marginX, ivContentY, marginX + tableWidth, ivContentY);
 
-// === Baris isi 3 kolom (EKG, Radologi, Laboratorium) ===
+
 const rowIVContentHeight = 10;
 const colIVWidth = tableWidth / 3;
 
-// Garis vertikal antar kolom
+
 doc.line(marginX + colIVWidth, ivContentY, marginX + colIVWidth, ivContentY + rowIVContentHeight);
 doc.line(marginX + colIVWidth * 2, ivContentY, marginX + colIVWidth * 2, ivContentY + rowIVContentHeight);
 
-// Isi teks per kolom
+
 doc.text("EKG : +", marginX + 3, ivContentY + 6);
 doc.text("Radologi : thorax, abdomen 3 posisi", marginX + colIVWidth + 3, ivContentY + 6);
 doc.text("Laboratorium : dr, gds, ur, cr", marginX + colIVWidth * 2 + 3, ivContentY + 6);
 
-// Garis bawah baris isi
+
 const ivBottomY = ivContentY + rowIVContentHeight;
 doc.line(marginX, ivBottomY, marginX + tableWidth, ivBottomY);
 
-// === Border kiri-kanan untuk seluruh area IV ===
-doc.line(marginX, pemeriksaanPenunjangY, marginX, ivBottomY); // kiri
-doc.line(marginX + tableWidth, pemeriksaanPenunjangY, marginX + tableWidth, ivBottomY); // kanan
+
+doc.line(marginX, pemeriksaanPenunjangY, marginX, ivBottomY); 
+doc.line(marginX + tableWidth, pemeriksaanPenunjangY, marginX + tableWidth, ivBottomY); 
 
 
-// === V. DIAGNOSIS ===
-const diagnosisY = ivBottomY; // lanjutan langsung dari bawah IV
+
+const diagnosisY = ivBottomY;
 const rowVHeaderHeight = 8;
 
-// Garis atas (nyambung dari IV)
+
 doc.line(marginX, diagnosisY, marginX + tableWidth, diagnosisY);
 
-// Judul V
+
 doc.setFont("helvetica", "normal");
 doc.setFontSize(9);
 doc.text("V. DIAGNOSIS", marginX + 3, diagnosisY + 6);
 
-// Garis bawah header V
+
 const diagnosisContentY = diagnosisY + rowVHeaderHeight;
 doc.line(marginX, diagnosisContentY, marginX + tableWidth, diagnosisContentY);
 
-// === Isi diagnosis (1 baris, 1 kolom) ===
+
 const rowDiagnosisHeight = 10;
 doc.text(
   "obs abdominal pain , vomitus profuse dd ileus",
@@ -352,90 +338,81 @@ doc.text(
   diagnosisContentY + 6
 );
 
-// Garis bawah isi diagnosis
 const diagnosisBottomY = diagnosisContentY + rowDiagnosisHeight;
 doc.line(marginX, diagnosisBottomY, marginX + tableWidth, diagnosisBottomY);
 
-// === Border kiri-kanan untuk area diagnosis ===
-doc.line(marginX, diagnosisY, marginX, diagnosisBottomY); // kiri
-doc.line(marginX + tableWidth, diagnosisY, marginX + tableWidth, diagnosisBottomY); // kanan
+doc.line(marginX, diagnosisY, marginX, diagnosisBottomY);
+doc.line(marginX + tableWidth, diagnosisY, marginX + tableWidth, diagnosisBottomY);
 
-// === VI. TATALAKSANA ===
-const tatalaksanaY = diagnosisBottomY; // lanjutan langsung dari bawah V
+
+const tatalaksanaY = diagnosisBottomY;
 const rowVIHeaderHeight = 8;
 
-// Garis atas (nyambung dari V)
+
 doc.line(marginX, tatalaksanaY, marginX + tableWidth, tatalaksanaY);
 
-// Judul VI
+
 doc.setFont("helvetica", "normal");
 doc.setFontSize(9);
 doc.text("VI. TATALAKSANA", marginX + 3, tatalaksanaY + 6);
 
-// Garis bawah header VI
 const tatalaksanaContentY = tatalaksanaY + rowVIHeaderHeight;
 doc.line(marginX, tatalaksanaContentY, marginX + tableWidth, tatalaksanaContentY);
 
-// === Isi tatalaksana (1 baris, 1 kolom, bisa wrap text) ===
 const tatalaksanaText =
   "Inf RL 20 tpm Inj pantoprazole 1a/24 jam Inj ketorolac 1a/8 jam kp nyeri " +
   "inj ondan 1a/8 jam Po: Sukralfat syr 3x10 ml";
 const wrappedTatalaksana = doc.splitTextToSize(tatalaksanaText, tableWidth - 10);
 doc.text(wrappedTatalaksana, marginX + 3, tatalaksanaContentY + 6);
 
-// Hitung tinggi teks agar border bawah pas
+
 const tatalaksanaTextHeight = wrappedTatalaksana.length * 4 + 6;
 const tatalaksanaBottomY = tatalaksanaContentY + tatalaksanaTextHeight;
 
-// Garis bawah isi tatalaksana
+
 doc.line(marginX, tatalaksanaBottomY, marginX + tableWidth, tatalaksanaBottomY);
 
-// === Border kiri-kanan untuk area tatalaksana ===
-doc.line(marginX, tatalaksanaY, marginX, tatalaksanaBottomY); // kiri
-doc.line(marginX + tableWidth, tatalaksanaY, marginX + tableWidth, tatalaksanaBottomY); // kanan
 
-// === Baris Akhir: Tanggal dan Jam | Nama Dokter & Tanda Tangan ===
+doc.line(marginX, tatalaksanaY, marginX, tatalaksanaBottomY); 
+doc.line(marginX + tableWidth, tatalaksanaY, marginX + tableWidth, tatalaksanaBottomY); 
+
+
 const footerRowY = tatalaksanaBottomY;
 const footerRowHeight = 10;
 
-// Garis atas baris footer
+
 doc.line(marginX, footerRowY, marginX + tableWidth, footerRowY);
 
-// Kolom kiri dan kanan
+
 const footerColWidth = tableWidth / 2;
 
-// Teks label kiri & kanan
+
 doc.setFont("helvetica", "normal");
 doc.setFontSize(9);
 doc.text("Tanggal dan Jam :", marginX + 3, footerRowY + 7);
 doc.text("Nama Dokter & Tanda Tangan :", marginX + footerColWidth + 3, footerRowY + 7);
 
-// Garis pemisah vertikal tengah
+
 doc.line(marginX + footerColWidth, footerRowY, marginX + footerColWidth, footerRowY + footerRowHeight);
 
-// Garis bawah & border kanan kiri
-doc.line(marginX, footerRowY + footerRowHeight, marginX + tableWidth, footerRowY + footerRowHeight); // bawah
-doc.line(marginX, footerRowY, marginX, footerRowY + footerRowHeight); // kiri
-doc.line(marginX + tableWidth, footerRowY, marginX + tableWidth, footerRowY + footerRowHeight); // kanan
 
-const footerValueY = footerRowY + footerRowHeight; // mulai tepat di bawah baris sebelumnya
-const footerValueHeight = 20; // beri ruang untuk QR code dan teks
+doc.line(marginX, footerRowY + footerRowHeight, marginX + tableWidth, footerRowY + footerRowHeight); 
+doc.line(marginX, footerRowY, marginX, footerRowY + footerRowHeight);
+doc.line(marginX + tableWidth, footerRowY, marginX + tableWidth, footerRowY + footerRowHeight); 
 
-// Garis atas
+const footerValueY = footerRowY + footerRowHeight; 
+const footerValueHeight = 20; 
+
 doc.line(marginX, footerValueY, marginX + tableWidth, footerValueY);
 
-// Bagi dua kolom
 const footerValueColWidth = tableWidth / 2;
 
-// Kolom kiri: tanggal & jam
 doc.setFont("helvetica", "normal");
 doc.setFontSize(9);
 doc.text("22-10-2025 08:19:37 WIB", marginX + 3, footerValueY + 8);
 
-// Kolom kanan: QR code + nama dokter
 const qrData = "dr. Agista Khoirul Mahendra | 22-10-2025 08:19:37 WIB";
 
-// Generate QR secara async
 QRCode.toDataURL(qrData, { width: 80 }, (err, qrUrl) => {
   if (!err) {
     const qrSize = 12;
@@ -443,10 +420,8 @@ QRCode.toDataURL(qrData, { width: 80 }, (err, qrUrl) => {
     const qrY = footerValueY + 3;
     doc.addImage(qrUrl, "PNG", qrX, qrY, qrSize, qrSize);
 
-    // Nama dokter di samping QR
     doc.text("dr. Agista Khoirul Mahendra", qrX + qrSize + 4, footerValueY + 10);
 
-    // Garis vertikal tengah
     doc.line(
       marginX + footerValueColWidth,
       footerValueY,

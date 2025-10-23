@@ -24,39 +24,61 @@ interface Pasien {
 
 export default function Ralan() {
   const [data, setData] = useState<Pasien[]>([]);
-  const [filter, setFilter] = useState(localStorage.getItem?.("filter")||"");
+  const [filter, setFilter] = useState(localStorage.getItem?.("filter") || "");
   const navigate = useNavigate();
-  const [startDate, setStartDate] = useState(localStorage.getItem?.("startDate")||"");
-  const [endDate, setEndDate] = useState(localStorage.getItem?.("endDate")||"");
-  const [noBpjs, setNoBpjs] = useState(localStorage.getItem?.("noBpjs")||"");
-  const [noSep, setNoSep] = useState(localStorage.getItem?.("noSep")||"");
-  const [noRekam, setNoRekam] = useState(localStorage.getItem?.("noRekam")||"");
+  const [startDate, setStartDate] = useState(localStorage.getItem?.("startDate") || "");
+  const [endDate, setEndDate] = useState(localStorage.getItem?.("endDate") || "");
+  const [noBpjs, setNoBpjs] = useState(localStorage.getItem?.("noBpjs") || "");
+  const [noSep, setNoSep] = useState(localStorage.getItem?.("noSep") || "");
+  const [noRekam, setNoRekam] = useState(localStorage.getItem?.("noRekam") || "");
 
+  const dataPasienDummy: Pasien[] = [
+    {
+      no_rawat: "2025/001",
+      no_rkm_medis: "000001",
+      tgl_registrasi: "2025-10-10T08:00:00Z",
+      status: "Lengkap",
+      no_sep: "SEP-2025001",
+      no_kartu: "0001234567890",
+      nm_pasien: "Ahmad Santoso",
+      tgl_lahir: "1990-04-15",
+      jk: "L",
+      status_claim: 1,
+    },
+    {
+      no_rawat: "2025/002",
+      no_rkm_medis: "000002",
+      tgl_registrasi: "2025-10-11T09:30:00Z",
+      status: "Lengkap",
+      no_sep: "SEP-2025002",
+      no_kartu: "0009876543210",
+      nm_pasien: "Dewi Lestari",
+      tgl_lahir: "1993-09-22",
+      jk: "P",
+      status_claim: 3,
+    },
+  ];
   const getList = async () => {
     try {
-      let dt = "";
-      if (startDate !== "") {
-        dt += `?mulai=${startDate}`;
-        if (endDate !== "") {
-          dt += `&sampai=${startDate}`;
-        }
-      }
-      const raw = await fetch(`http://192.168.20.114:3000/grab/list/rajal${dt}`);
-      const data = await raw.json();
-      setData(data.data);
-    } catch {
-      setData(data);
+      // simulasi pengambilan data dummy
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      setData(dataPasienDummy);
+      console.log(dataPasienDummy);
+    } catch (err) {
+      console.error(err);
+      setData([]);
     }
   };
+
   useEffect(() => {
     getList();
-    localStorage.setItem("filter",filter);
-    localStorage.setItem("startDate",startDate);
-    localStorage.setItem("endDate",endDate);
-    localStorage.setItem("noBpjs",noBpjs);
-    localStorage.setItem("noSep",noSep);
-    localStorage.setItem("noRekam",noRekam);
-  }, [startDate, endDate,filter]);
+    localStorage.setItem("filter", filter);
+    localStorage.setItem("startDate", startDate);
+    localStorage.setItem("endDate", endDate);
+    localStorage.setItem("noBpjs", noBpjs);
+    localStorage.setItem("noSep", noSep);
+    localStorage.setItem("noRekam", noRekam);
+  }, [startDate, endDate, filter]);
 
   const columns: TableColumn<Pasien>[] = [
     {
@@ -131,7 +153,7 @@ export default function Ralan() {
           case 7:
             status = "Terkirim"
             break;
-        
+
           default:
             color = "bg-red-500 text-white"
             status = "Belum"
@@ -169,12 +191,14 @@ export default function Ralan() {
           </button>
 
           <button
+            onClick={() =>
+              navigate(`berkas/${row.no_rawat.replace(/\//g, "-")}`)
+            }
             className="p-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
             title="PDF"
           >
             <FaFilePdf size={12} />
           </button>
-
           <button
             className="p-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition"
             title="Kirim"
@@ -332,7 +356,7 @@ export default function Ralan() {
         highlightOnHover
         striped
         customStyles={customStyles}
-      />
+      />  
     </div>
   );
 }

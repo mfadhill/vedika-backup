@@ -14,6 +14,7 @@ import { generateCpptRanap } from "./pdf/CpptRanap";
 import { generateTindakanMedis } from "./pdf/LaporanTindakanMedis";
 import { generateLaporanOperasi } from "./pdf/LaporanOperasi";
 import { generateAsesmen } from "./pdf/Asesmen";
+import { generateSuratControl } from "./pdf/Ralan/SuratControl";
 
 export interface Pasien {
   claim_id?: number | null;
@@ -40,7 +41,7 @@ const BerkasRanap: React.FC = () => {
   const { no_rawat } = useParams<{ no_rawat: string }>();
   const [pasien, setPasien] = useState<Pasien | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" | "ASESMEN" |"TRIASE" | "RESUME" | "HASILLAB" | "SPRI" |"RADIOLOGI" | "CPPTRANAP" | "TINDAKANMEDIS" | "LAPORANOPERASI"| null>(null);
+  const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" | "ASESMEN" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" | "RADIOLOGI" | "CPPTRANAP" | "TINDAKANMEDIS" | "LAPORANOPERASI" | null>(null);
 
   const getData = async () => {
     if (!no_rawat) return;
@@ -128,15 +129,15 @@ const BerkasRanap: React.FC = () => {
           <button
             className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "SEP" ? "bg-blue-500 text-white" : ""
               }`}
-           onClick={async () => {
-  if (!pasien) {
-    alert("Data pasien belum tersedia");
-    return;
-  }
-  const url = await generateSEP(pasien!);
-  setPdfUrl(url);
-  setActivePdf("SEP");
-}}
+            onClick={async () => {
+              if (!pasien) {
+                alert("Data pasien belum tersedia");
+                return;
+              }
+              const url = await generateSEP(pasien!);
+              setPdfUrl(url);
+              setActivePdf("SEP");
+            }}
 
           >
             SEP
@@ -153,19 +154,19 @@ const BerkasRanap: React.FC = () => {
           >
             RESUME PASIEN RANAP
           </button>
-            <button
-            className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "SPRI" ? "bg-blue-500 text-white" : ""
+          <button
+            className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "SuratControl" ? "bg-blue-500 text-white" : ""
               }`}
             onClick={async () => {
-              const url = await generateSPRI();
+              const url = await generateSuratControl();
               setPdfUrl(url);
-              setActivePdf("SPRI");
+              setActivePdf("SuratControl");
             }}
           >
             SPRI
           </button>
 
-           <button
+          <button
             className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "HASILLAB" ? "bg-blue-500 text-white" : ""
               }`}
             onClick={async () => {
@@ -188,7 +189,7 @@ const BerkasRanap: React.FC = () => {
             LAPORAN OPERASI
           </button>
 
-           <button
+          <button
             className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "RADIOLOGI" ? "bg-blue-500 text-white" : ""
               }`}
             onClick={async () => {
@@ -199,7 +200,7 @@ const BerkasRanap: React.FC = () => {
           >
             RADIOLOGI
           </button>
-            <button
+          <button
             className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "CPPTRANAP" ? "bg-blue-500 text-white" : ""
               }`}
             onClick={async () => {
@@ -221,38 +222,38 @@ const BerkasRanap: React.FC = () => {
           >
             OBAT
           </button>
-            <button
+          <button
             className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "BILLING" ? "bg-blue-500 text-white" : ""
               }`}
-            onClick={ async () => {
-                 const url = await generateBilling();
+            onClick={async () => {
+              const url = await generateBilling();
               setPdfUrl((url));
               setActivePdf("BILLING");
             }}
           >
             BILLING
           </button>
-            <button
+          <button
             className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "ASESMEN" ? "bg-blue-500 text-white" : ""
               }`}
-            onClick={ async () => {
-                 const url = await generateAsesmen();
+            onClick={async () => {
+              const url = await generateAsesmen();
               setPdfUrl((url));
               setActivePdf("ASESMEN");
             }}
           >
             ASESMEN AWAL MEDIS
           </button>
-              <button
+          <button
             className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "TINDAKANMEDIS" ? "bg-blue-500 text-white" : ""
               }`}
-            onClick={ async () => {
-                 const url = await generateTindakanMedis();
+            onClick={async () => {
+              const url = await generateTindakanMedis();
               setPdfUrl((url));
               setActivePdf("TINDAKANMEDIS");
             }}
           >
-          LAPORAN TINDAKAN MEDIS
+            LAPORAN TINDAKAN MEDIS
           </button>
 
           <button
