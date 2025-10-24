@@ -111,7 +111,6 @@ const centerX = pageWidth / 2;
   doc.text(jk, rightValueX, startY);
   startY += 10;
 
- // === TABEL 1: POST SURGICAL ASSESSMENT ===
 const tableWidth = pageWidth - margin * 2;
 const colLeftWidth = tableWidth * 0.65;
 const headerHeight = 8;
@@ -131,9 +130,7 @@ doc.text("POST SURGICAL ASSESSMENT", pageWidth / 2, tableY + 5.5, { align: "cent
 
 tableY += headerHeight;
 
-// BORDER UTAMA TABEL
 doc.rect(margin, tableY, tableWidth, tableHeight);
-// GARIS PEMBATAS KOLOM
 doc.line(margin + colLeftWidth, tableY, margin + colLeftWidth, tableY + tableHeight);
 
 // ==== KOLOM KIRI ====
@@ -179,7 +176,6 @@ for (let i = 0; i < diagnosaLines.length; i += 2) {
   leftY += lineHeight;
 }
 
-// ==== KOLOM KANAN ====
 const rightText =
   `Tipe/Jenis Anestesi\nSPINAL\n\n` +
   `Dikirim ke Pemeriksaan PA\nTidak\n\n` +
@@ -189,7 +185,6 @@ const rightText =
 const rightLines = rightText.split("\n");
 const textHeight = rightLines.length * lineHeight;
 
-// Vertikal tengah kolom kanan
 let rightStartY = tableY + padding + (tableHeight - textHeight) / 2;
 
 rightLines.forEach(line => {
@@ -197,9 +192,7 @@ rightLines.forEach(line => {
   rightStartY += lineHeight;
 });
 
-// Update posisi Y untuk laporan berikutnya
 const laporanY = tableY + tableHeight;
-  // === TABEL 2: LAPORAN OPERASI ===
   doc.setFillColor(220, 220, 220);
   doc.rect(margin, laporanY, tableWidth, 8, "F");
   doc.setFont("helvetica", "bold");
@@ -221,17 +214,13 @@ const laporanY = tableY + tableHeight;
   doc.setFontSize(8);
   doc.text(isiLaporan, margin + 2, textY, { maxWidth: tableWidth - 4, lineHeightFactor: 1.4 });
 
-  // Hitung tinggi isi teks
   const lineCount = isiLaporan.split("\n").length;
   const laporanHeight = lineCount * 5.5;
 
-  // === BORDER TOTAL ===
   doc.setDrawColor(0);
   doc.rect(margin, laporanY, tableWidth, laporanHeight + 45);
 
- // === BAGIAN KANAN BAWAH ===
 const qrSize = 23;
-// Geser semua elemen 10 poin ke kiri
 const textX = pageWidth - margin - 5 - 10; 
 const textAlign = { align: "right" };
 const baseY = laporanY + laporanHeight + 2;

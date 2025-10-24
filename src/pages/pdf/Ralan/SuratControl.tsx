@@ -13,11 +13,8 @@ export const generateSuratControl = async (): Promise<string> => {
     img.onload = resolve;
   });
 
-  
 doc.addImage(img, "PNG", 6, 10, 45, 8);
 
-
-// Judul tengah
 doc.setFontSize(13);
 doc.text("SURAT RENCANA CONTROL", pageWidth / 2, 14, { align: "center" });
 doc.setFontSize(11);

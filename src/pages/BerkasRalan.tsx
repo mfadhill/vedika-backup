@@ -8,6 +8,7 @@ import axios from "axios";
 
 import { generateSuratControl } from "./pdf/Ralan/SuratControl";
 import { generateTindakanRalan } from "./pdf/Ralan/TindakanRalan";
+import { generateHemodialisasi } from "./pdf/Ralan/Hemodialisasi";
 
 export interface Pasien {
    claim_id?: number | null;
@@ -34,7 +35,7 @@ const BerkasRanap: React.FC = () => {
    const { no_rawat } = useParams<{ no_rawat: string }>();
    const [pasien, setPasien] = useState<Pasien | null>(null);
    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-   const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" | "TINDAKANRALAN" | "ASESMEN" | "SURATCONTROL" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" | "RADIOLOGI" | "CPPTRANAP" | "TINDAKANMEDIS" | "LAPORANOPERASI" | null>(null);
+   const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" | "HEMODIALISASI" | "TINDAKANRALAN" | "ASESMEN" | "SURATCONTROL" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" | "RADIOLOGI" | "CPPTRANAP" | "TINDAKANMEDIS" | "LAPORANOPERASI" | null>(null);
 
    const getData = async () => {
       if (!no_rawat) return;
@@ -116,7 +117,6 @@ const BerkasRanap: React.FC = () => {
             </div>
          </div>
 
-         {/* Card Tombol + Preview PDF */}
          <div className="bg-white rounded-2xl shadow-xl p-6 w-full flex space-x-4">
             <div className="w-1/4 flex flex-col space-y-2">
                <button
@@ -131,7 +131,6 @@ const BerkasRanap: React.FC = () => {
                      setPdfUrl(url);
                      setActivePdf("SEP");
                   }}
-
                >
                   SEP
                </button>
@@ -160,7 +159,7 @@ const BerkasRanap: React.FC = () => {
                   LABORATORIUM
                </button>
 
-                <button
+               <button
                   className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "TINDAKANRALAN" ? "bg-blue-500 text-white" : ""
                      }`}
                   onClick={async () => {
@@ -183,7 +182,17 @@ const BerkasRanap: React.FC = () => {
                >
                   BILLING
                </button>
-
+               <button
+                  className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "HEMODIALISASI" ? "bg-blue-500 text-white" : ""
+                     }`}
+                  onClick={async () => {
+                     const url = await generateHemodialisasi();
+                     setPdfUrl((url));
+                     setActivePdf("HEMODIALISASI");
+                  }}
+               >
+                  HEMODIALISASI
+               </button>
             </div>
 
             <div className="flex-1">

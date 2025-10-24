@@ -8,12 +8,12 @@ const formatRupiah = (angka: number): string => {
 export const generateTindakanRalan = async (): Promise<string> => {
   const doc = new jsPDF();
 
-  // === KONFIGURASI DASAR ===
-  const margin = 4; // full margin 4 mm di kiri dan kanan
+
+  const margin = 4; 
   const pageWidth = doc.internal.pageSize.getWidth();
   const centerX = pageWidth / 2;
 
-  // === LOGO RS ===
+
   const img = new Image();
   img.src = "/logo-rs.png";
   await new Promise<void>((resolve) => (img.onload = () => resolve()));
