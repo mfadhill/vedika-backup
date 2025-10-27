@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { generateSEP } from "./pdf/Sep";
 import { generateHASILLAB } from "./pdf/HasilLab";
-import { generateBilling } from "./pdf/Billing";
 
 import { useParams } from "react-router-dom";
 import axios from "axios";
-
 import { generateSuratControl } from "./pdf/Ralan/SuratControl";
 import { generateTindakanRalan } from "./pdf/Ralan/TindakanRalan";
 import { generateHemodialisasi } from "./pdf/Ralan/Hemodialisasi";
+import { generateBillingRalan } from "./pdf/Ralan/BillingRalan";
+import { generateCpptRalan } from "./pdf/Ralan/CpptRalan";
+import {generateEklaim} from "./pdf/Ralan/Eklaim";
 
 export interface Pasien {
    claim_id?: number | null;
@@ -35,7 +36,7 @@ const BerkasRanap: React.FC = () => {
    const { no_rawat } = useParams<{ no_rawat: string }>();
    const [pasien, setPasien] = useState<Pasien | null>(null);
    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-   const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" | "HEMODIALISASI" | "TINDAKANRALAN" | "ASESMEN" | "SURATCONTROL" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" | "RADIOLOGI" | "CPPTRANAP" | "TINDAKANMEDIS" | "LAPORANOPERASI" | null>(null);
+   const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" |"EKLAIM" | "HEMODIALISASI" | "TINDAKANRALAN" | "ASESMEN" | "SURATCONTROL" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" | "RADIOLOGI" | "CPPTRALAN" | "TINDAKANMEDIS" | "LAPORANOPERASI" | null>(null);
 
    const getData = async () => {
       if (!no_rawat) return;
@@ -170,12 +171,23 @@ const BerkasRanap: React.FC = () => {
                >
                   TINDAKAN RALAN
                </button>
+                 <button
+                  className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "CPPTRALAN" ? "bg-blue-500 text-white" : ""
+                     }`}
+                  onClick={async () => {
+                     const url = await generateCpptRalan();
+                     setPdfUrl(url);
+                     setActivePdf("CPPTRALAN");
+                  }}
+               >
+                  CPPT RALAN
+               </button>
 
                <button
                   className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "BILLING" ? "bg-blue-500 text-white" : ""
                      }`}
                   onClick={async () => {
-                     const url = await generateBilling();
+                     const url = await generateBillingRalan();
                      setPdfUrl((url));
                      setActivePdf("BILLING");
                   }}
@@ -193,8 +205,21 @@ const BerkasRanap: React.FC = () => {
                >
                   HEMODIALISASI
                </button>
+                <button
+                  className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "EKLAIM" ? "bg-blue-500 text-white" : ""
+                     }`}
+                  onClick={async () => {
+                     const url = await generateEklaim();
+                     setPdfUrl((url));
+                     setActivePdf("EKLAIM");
+                  }}
+               >
+                  E-KLAIM
+               </button>
+
             </div>
 
+            
             <div className="flex-1">
                {pdfUrl ? (
                   <iframe

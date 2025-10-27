@@ -37,7 +37,7 @@ export const generateTindakanRalan = async (): Promise<string> => {
   doc.text("TINDAKAN RAWAT JALAN", centerX, 32, { align: "center" });
   doc.line(margin, 35, pageWidth - margin, 35);
 
-  // === ISI TABEL (5 kolom total) ===
+ 
   const body: any[][] = [];
 
   // === DOKTER ===
