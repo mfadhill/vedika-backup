@@ -10,6 +10,7 @@ import { generateHemodialisasi } from "./pdf/Ralan/Hemodialisasi";
 import { generateBillingRalan } from "./pdf/Ralan/BillingRalan";
 import { generateCpptRalan } from "./pdf/Ralan/CpptRalan";
 import {generateEklaim} from "./pdf/Ralan/Eklaim";
+import { generateKonsultasiMedik } from "./pdf/Ralan/KonsultasiMedik";
 
 export interface Pasien {
    claim_id?: number | null;
@@ -36,7 +37,7 @@ const BerkasRanap: React.FC = () => {
    const { no_rawat } = useParams<{ no_rawat: string }>();
    const [pasien, setPasien] = useState<Pasien | null>(null);
    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-   const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" |"EKLAIM" | "HEMODIALISASI" | "TINDAKANRALAN" | "ASESMEN" | "SURATCONTROL" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" | "RADIOLOGI" | "CPPTRALAN" | "TINDAKANMEDIS" | "LAPORANOPERASI" | null>(null);
+   const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" |"EKLAIM" | "HEMODIALISASI" | "KONSULTASIMEDIK" | "TINDAKANRALAN" | "ASESMEN" | "SURATCONTROL" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" | "RADIOLOGI" | "CPPTRALAN" | "TINDAKANMEDIS" | "LAPORANOPERASI" | null>(null);
 
    const getData = async () => {
       if (!no_rawat) return;
@@ -204,6 +205,17 @@ const BerkasRanap: React.FC = () => {
                   }}
                >
                   HEMODIALISASI
+               </button>
+                <button
+                  className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "KONSULTASIMEDIK" ? "bg-blue-500 text-white" : ""
+                     }`}
+                  onClick={async () => {
+                     const url = await generateKonsultasiMedik();
+                     setPdfUrl((url));
+                     setActivePdf("KONSULTASIMEDIK");
+                  }}
+               >
+                  KONSULTASI MEDIK
                </button>
                 <button
                   className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "EKLAIM" ? "bg-blue-500 text-white" : ""

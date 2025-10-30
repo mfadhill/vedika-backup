@@ -36,14 +36,13 @@
 
          doc.setFont("helvetica", "bold");
          doc.setFontSize(12);
-         doc.text("LAPORAN TINDAKAN MEDIS", centerX, headerLineY + 12, { align: "center" });
+         doc.text("LAPORAN TINDAKAN MEDIS", centerX, headerLineY + 7, { align: "center" });
 
          doc.setFont("helvetica", "normal");
          doc.setFontSize(8);
 
-         const startY = headerLineY + 22;
+         const startY = headerLineY + 17;
          const rightBoxWidth = 65;
-         const leftBoxWidth = totalWidth - rightBoxWidth;
          const valueOffset = 25;
          const valueOffsetRight = 14;
          const lineSpacing = 5;
@@ -60,7 +59,6 @@
          doc.text(": REGALOH RT 2 RW 4", leftX + valueOffset, rowY);
          rowY += lineSpacing;
 
-         // Kolom tengah
          const centerXLeft = leftX + 72;
          let centerY = startY;
          doc.text("Jenis Kelamin", centerXLeft, centerY);

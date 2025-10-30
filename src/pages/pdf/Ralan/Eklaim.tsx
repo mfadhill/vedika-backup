@@ -140,8 +140,8 @@ doc.setFont("helvetica", "normal");
 doc.setFontSize(9);
 
 const singleColStartX = labelX1;
-const colonAlignX = singleColStartX + 36; // posisi ":" sejajar
-const valueStartX = colonAlignX + 4;       // jarak kecil setelah ":"
+const colonAlignX = singleColStartX + 36; 
+const valueStartX = colonAlignX + 4;     
 const lineSpacing = 6;
 
 const dataList = [

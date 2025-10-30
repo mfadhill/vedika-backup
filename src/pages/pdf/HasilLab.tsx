@@ -51,7 +51,7 @@ export const generateHASILLAB = (): Promise<string> => {
       const textXCenter = pageWidth / 2;
 
       // === Header Rumah Sakit ===
-      let y = 16; // posisi awal teks agar sejajar vertikal dengan logo
+      let y = 16; 
       doc.text("RSU Fastabiq Sehat PKU Muhammadiyah", textXCenter, y, { align: "center" });
 
       doc.setFont("helvetica", "normal");
@@ -68,7 +68,6 @@ export const generateHASILLAB = (): Promise<string> => {
       doc.setLineWidth(0.3);
       doc.line(10, y + 3, pageWidth - 10, y + 3);
 
-
       doc.setFontSize(12);
       doc.text("HASIL PEMERIKSAAN LABORATORIUM", 105, 38, { align: "center" });
 
@@ -76,7 +75,6 @@ export const generateHASILLAB = (): Promise<string> => {
       doc.setFont("helvetica", "normal");
 
       let startY = 50;
-
 
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
