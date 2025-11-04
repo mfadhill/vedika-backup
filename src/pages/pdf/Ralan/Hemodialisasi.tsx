@@ -118,7 +118,6 @@ export const generateHemodialisasi = async (): Promise<string> => {
     ],
   ];
 
-  // === POSISI TABEL DIPINDAH KE BAWAH JUDUL ===
   autoTable(doc, {
     startY: 52, 
     head: headers,

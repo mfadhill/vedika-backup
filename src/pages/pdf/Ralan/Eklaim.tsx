@@ -40,7 +40,7 @@ export const generateEklaim = async (): string => {
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) ageYears--;
     return ageYears;
   };
-    const getBase64Image = async (url: string) => {
+  const getBase64Image = async (url: string) => {
     const res = await fetch(url);
     const blob = await res.blob();
     return new Promise<string>((resolve) => {
@@ -51,9 +51,7 @@ export const generateEklaim = async (): string => {
   };
   const imgBase64 = await getBase64Image("/kemkes.png");
 
-
   const umur = calculateAge(pasienData.tgl_lahir);
-
 
   const labelX1 = 14;
   const valueX1 = 50;
@@ -76,43 +74,35 @@ export const generateEklaim = async (): string => {
     y += 6;
   };
 
-const logoSize = 15;
-const logoX = 10;
-const logoY = 10;
-const titleX = logoX + logoSize + 5; 
-const rightMargin = 196;
+  const logoSize = 15;
+  const logoX = 10;
+  const logoY = 10;
+  const titleX = logoX + logoSize + 5;
+  const rightMargin = 196;
 
+  doc.addImage(imgBase64, "PNG", logoX, logoY, logoSize, logoSize);
 
-doc.addImage(imgBase64, "PNG", logoX, logoY, logoSize, logoSize);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.text("KEMENTERIAN KESEHATAN REPUBLIK INDONESIA", titleX, logoY + 6);
 
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.text(pasienData.payor_cd ?? "-", rightMargin, logoY + 6, { align: "right" });
 
-doc.setFont("helvetica", "bold");
-doc.setFontSize(12);
-doc.text("KEMENTERIAN KESEHATAN REPUBLIK INDONESIA", titleX, logoY + 6);
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(10);
+  doc.text("Berkas Klaim Individual Pasien", titleX, logoY + 12);
 
+  doc.text(formatDate(pasienData.created_at), rightMargin, logoY + 12, { align: "right" });
 
-doc.setFont("helvetica", "normal");
-doc.setFontSize(10);
-doc.text(pasienData.payor_cd ?? "-", rightMargin, logoY + 6, { align: "right" });
+  const garisY = logoY + 18;
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.6);
+  doc.line(logoX, garisY, rightMargin, garisY);
 
+  y = garisY + 8;
 
-doc.setFont("helvetica", "italic");
-doc.setFontSize(10);
-doc.text("Berkas Klaim Individual Pasien", titleX, logoY + 12);
-
-
-doc.text(formatDate(pasienData.created_at), rightMargin, logoY + 12, { align: "right" });
-
-
-const garisY = logoY + 18;
-doc.setDrawColor(0, 0, 0);
-doc.setLineWidth(0.6);
-doc.line(logoX, garisY, rightMargin, garisY);
-
-y = garisY + 8;
-
-
-  // === DATA PASIEN ===
   writeTwoCols("Kode Rumah Sakit", "3318110", "Kelas Rumah Sakit", "C");
   writeTwoCols(
     "Nama RS",
@@ -134,40 +124,34 @@ y = garisY + 8;
   y += 6;
   doc.line(labelX1, y, 196, y);
 
-  // === DIAGNOSA & PROSEDUR ===
-y += 8;
-doc.setFont("helvetica", "normal");
-doc.setFontSize(9);
+  y += 8;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
 
-const singleColStartX = labelX1;
-const colonAlignX = singleColStartX + 36; 
-const valueStartX = colonAlignX + 4;     
-const lineSpacing = 6;
+  const singleColStartX = labelX1;
+  const colonAlignX = singleColStartX + 36;
+  const valueStartX = colonAlignX + 4;
 
-const dataList = [
-  { label: "Diagnosa Utama", value: pasienData.diagnosa_inacbg?.[0]?.display || "-" },
-  { label: "Diagnosa Sekunder", value: pasienData.diagnosa_inacbg?.[1]?.display || "-" },
-  { label: "Prosedur", value: pasienData.prosedur_inacbg?.[0]?.display || "-" },
-];
+  const dataList = [
+    { label: "Diagnosa Utama", value: pasienData.diagnosa_inacbg?.[0]?.display || "-" },
+    { label: "Diagnosa Sekunder", value: pasienData.diagnosa_inacbg?.[1]?.display || "-" },
+    { label: "Prosedur", value: pasienData.prosedur_inacbg?.[0]?.display || "-" },
+  ];
 
-// Loop dan tulis tiap baris rapi
-dataList.forEach((item) => {
-  doc.text(item.label, singleColStartX, y);
-  doc.text(":", colonAlignX, y);
-  doc.text(String(item.value), valueStartX, y);
-  y += 20;
-});
+  dataList.forEach((item) => {
+    doc.text(item.label, singleColStartX, y);
+    doc.text(":", colonAlignX, y);
+    doc.text(String(item.value), valueStartX, y);
+    y += 20;
+  });
 
   writeTwoCols("ADL Sub Acute", umur, "ADL Cronic", pasienData.cara_pulang);
+  y += 2;
+  doc.setLineWidth(0.1);
+  doc.line(labelX1, y, 196, y);
+  y += 8;
 
 
-// Garis bawah pemisah
-y += 2;
-doc.setLineWidth(0.1);
-doc.line(labelX1, y, 196, y);
-y += 8;
-
-  // === HASIL GROUPING ===
   const cbg = pasienData.grouping_inacbg[0];
   doc.setFont("helvetica", "bold");
   doc.text("HASIL GROUPING", labelX1, y);
@@ -188,7 +172,6 @@ y += 8;
   doc.text("Rp.", 170, y);
   doc.text(cbg.tariff.toLocaleString("id-ID"), 196, y, { align: "right" });
 
-  // === RETURN SEBAGAI PREVIEW URL ===
   const blob = doc.output("blob");
   return URL.createObjectURL(blob);
 };

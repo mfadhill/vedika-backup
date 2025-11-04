@@ -7,26 +7,24 @@ export const generateSuratControl = async (): Promise<string> => {
 
   // === HEADER ===
   const img = new Image();
-  img.src = "/logo-bpjs.png"; 
+  img.src = "/logo-bpjs.png";
 
   await new Promise((resolve) => {
     img.onload = resolve;
   });
 
-doc.addImage(img, "PNG", 6, 10, 45, 8);
+  doc.addImage(img, "PNG", 6, 10, 45, 8);
 
-doc.setFontSize(13);
-doc.text("SURAT RENCANA CONTROL", pageWidth / 2, 14, { align: "center" });
-doc.setFontSize(11);
-doc.text("RSU Fastabiq Sehat PKU Muhammadiyah", pageWidth / 2, 19, { align: "center" });
+  doc.setFontSize(13);
+  doc.text("SURAT RENCANA CONTROL", pageWidth / 2, 14, { align: "center" });
+  doc.setFontSize(11);
+  doc.text("RSU Fastabiq Sehat PKU Muhammadiyah", pageWidth / 2, 19, { align: "center" });
 
-doc.setFontSize(10);
-const rightBlockX = pageWidth - 44; 
-doc.text("No. SPRI/001/2025", rightBlockX, 14);
-doc.text("Tgl. 08 Oktober 2025", rightBlockX, 19);
+  doc.setFontSize(10);
+  const rightBlockX = pageWidth - 44;
+  doc.text("No. SPRI/001/2025", rightBlockX, 14);
+  doc.text("Tgl. 08 Oktober 2025", rightBlockX, 19);
 
-
-  // === ISI SURAT ===
   let startY = 40;
   const leftX = 15;
 
@@ -41,59 +39,52 @@ doc.text("Tgl. 08 Oktober 2025", rightBlockX, 19);
   startY += 8;
 
   const data = [
-  ["No. Kartu", "0001234567890"],
-  ["Nama Pasien", "Muhammad Salah (LAKI-LAKI)"],
-  ["Tgl. Lahir", "14 Mei 1998"],
-  ["Diagnosa Awal", "Demam Dengue"],
-  ["Tgl. Entri", "08 Oktober 2025"],
-];
+    ["No. Kartu", "0001234567890"],
+    ["Nama Pasien", "Muhammad Salah (LAKI-LAKI)"],
+    ["Tgl. Lahir", "14 Mei 1998"],
+    ["Diagnosa Awal", "Demam Dengue"],
+    ["Tgl. Entri", "08 Oktober 2025"],
+  ];
 
-const labelWidth = 35;
-const valueStartX = leftX + labelWidth;
-let tglLahirY = 0;
+  const labelWidth = 35;
+  const valueStartX = leftX + labelWidth;
+  let tglLahirY = 0;
 
-data.forEach(([label, value]) => {
-  doc.text(label, leftX, startY);
-  doc.text(":", leftX + labelWidth - 5, startY);
-  doc.text(value, valueStartX, startY);
+  data.forEach(([label, value]) => {
+    doc.text(label, leftX, startY);
+    doc.text(":", leftX + labelWidth - 5, startY);
+    doc.text(value, valueStartX, startY);
 
-  // Simpan posisi baris “Tgl. Lahir” untuk patokan sejajar QR
-  if (label === "Tgl. Lahir") tglLahirY = startY;
+    if (label === "Tgl. Lahir") tglLahirY = startY;
 
-  startY += 6;
-});
+    startY += 6;
+  });
 
-startY += 10;
-doc.text(
-  "Demikian atas bantuannya diucapkan banyak terima kasih.",
-  leftX,
-  startY
-);
+  startY += 10;
+  doc.text(
+    "Demikian atas bantuannya diucapkan banyak terima kasih.",
+    leftX,
+    startY
+  );
 
-// === QR CODE ===
-const qrText = `Dikeluarkan di RSU Fastabiq Sehat PKU Muhammadiyah, Kabupaten/Kota Pati
+  const qrText = `Dikeluarkan di RSU Fastabiq Sehat PKU Muhammadiyah, Kabupaten/Kota Pati
 Ditandatangani secara elektronik oleh dr. Ahmad Sulaiman
 ID D00123
 08-10-2025`;
 
-const qrDataUrl = await QRCode.toDataURL(qrText);
+  const qrDataUrl = await QRCode.toDataURL(qrText);
 
-const qrSize = 20;
-const qrX = pageWidth - qrSize - 20; // jarak dari kanan
-const qrY = tglLahirY - 1;
+  const qrSize = 20;
+  const qrX = pageWidth - qrSize - 20;
+  const qrY = tglLahirY - 1;
 
-// Tulisan “Mengetahui” di atas QR
-doc.setFontSize(10);
-doc.text("Mengetahui", qrX + qrSize / 2, qrY - 6, { align: "center" });
+  doc.setFontSize(10);
+  doc.text("Mengetahui", qrX + qrSize / 2, qrY - 6, { align: "center" });
 
-// Tambahkan QR-nya
-doc.addImage(qrDataUrl, "PNG", qrX, qrY, qrSize, qrSize);
+  doc.addImage(qrDataUrl, "PNG", qrX, qrY, qrSize, qrSize);
 
-// Nama dokter di bawah QR
-doc.text("dr. Ahmad Sulaiman", qrX + qrSize / 2, qrY + qrSize + 6, { align: "center" });
+  doc.text("dr. Ahmad Sulaiman", qrX + qrSize / 2, qrY + qrSize + 6, { align: "center" });
 
-
-  // === OUTPUT PDF ===
   const blob = doc.output("blob");
   return URL.createObjectURL(blob);
 };

@@ -40,7 +40,6 @@ export const generateTindakanRalan = async (): Promise<string> => {
  
   const body: any[][] = [];
 
-  // === DOKTER ===
   body.push([
     {
       content: "Tindakan Rawat Jalan Dokter",
@@ -84,7 +83,6 @@ export const generateTindakanRalan = async (): Promise<string> => {
     formatRupiah(75000),
   ]);
 
-  // === PARAMEDIS ===
   body.push([
     {
       content: "Tindakan Rawat Jalan Paramedis",
@@ -104,7 +102,6 @@ export const generateTindakanRalan = async (): Promise<string> => {
     },
   ]);
 
-  // === DOKTER & PARAMEDIS ===
   body.push([
     {
       content: "Tindakan Rawat Jalan Dokter & Paramedis",
@@ -132,7 +129,6 @@ export const generateTindakanRalan = async (): Promise<string> => {
     formatRupiah(80000),
   ]);
 
-  // === AUTOTABLE ===
   autoTable(doc, {
     startY: 40,
     theme: "grid",

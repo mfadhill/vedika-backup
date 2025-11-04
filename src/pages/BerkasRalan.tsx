@@ -11,6 +11,7 @@ import { generateBillingRalan } from "./pdf/Ralan/BillingRalan";
 import { generateCpptRalan } from "./pdf/Ralan/CpptRalan";
 import {generateEklaim} from "./pdf/Ralan/Eklaim";
 import { generateKonsultasiMedik } from "./pdf/Ralan/KonsultasiMedik";
+import { generateNeonatus } from "./pdf/Ralan/Neonatus";
 
 export interface Pasien {
    claim_id?: number | null;
@@ -37,7 +38,7 @@ const BerkasRanap: React.FC = () => {
    const { no_rawat } = useParams<{ no_rawat: string }>();
    const [pasien, setPasien] = useState<Pasien | null>(null);
    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-   const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" |"EKLAIM" | "HEMODIALISASI" | "KONSULTASIMEDIK" | "TINDAKANRALAN" | "ASESMEN" | "SURATCONTROL" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" | "RADIOLOGI" | "CPPTRALAN" | "TINDAKANMEDIS" | "LAPORANOPERASI" | null>(null);
+   const [activePdf, setActivePdf] = useState<"SEP" | "OBAT" | "BILLING" |"EKLAIM" | "HEMODIALISASI" | "NEONATUS" |"KONSULTASIMEDIK" | "TINDAKANRALAN" | "ASESMEN" | "SURATCONTROL" | "TRIASE" | "RESUME" | "HASILLAB" | "SPRI" | "RADIOLOGI" | "CPPTRALAN" | "TINDAKANMEDIS" | "LAPORANOPERASI" | null>(null);
 
    const getData = async () => {
       if (!no_rawat) return;
@@ -205,6 +206,17 @@ const BerkasRanap: React.FC = () => {
                   }}
                >
                   HEMODIALISASI
+               </button>
+               <button
+                  className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "NEONATUS" ? "bg-blue-500 text-white" : ""
+                     }`}
+                  onClick={async () => {
+                     const url = await generateNeonatus();
+                     setPdfUrl((url));
+                     setActivePdf("NEONATUS");
+                  }}
+               >
+                  NEONATUS
                </button>
                 <button
                   className={`w-full text-left text-sm font-sans px-2 py-1 rounded hover:bg-blue-300 ${activePdf === "KONSULTASIMEDIK" ? "bg-blue-500 text-white" : ""
