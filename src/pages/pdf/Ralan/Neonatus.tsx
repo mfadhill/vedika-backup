@@ -1,4 +1,6 @@
 import jsPDF from "jspdf";
+import QRCode from "qrcode";
+
 
 export const generateNeonatus = async (): Promise<string> => {
   const doc = new jsPDF({
@@ -35,6 +37,10 @@ export const generateNeonatus = async (): Promise<string> => {
     }
     return sectionY;
   };
+
+const qrData = "2025/10/25/000125"; 
+
+const qrDataUrl = await QRCode.toDataURL(qrData);
 
   return new Promise((resolve) => {
     img.onload = () => {
@@ -396,61 +402,331 @@ export const generateNeonatus = async (): Promise<string> => {
         sectionY += apCellH;
       });
 
-   // === DOWN SCORE ===
-sectionY += 8;
-sectionY = checkAddPage(doc, sectionY);
+      // === DOWN SCORE ===
+      sectionY += 8;
+      sectionY = checkAddPage(doc, sectionY);
 
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.text("Down Score:", 10, sectionY);
+      sectionY += 8;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+
+      const downScore = [
+        { label: "Frekuensi Nafas", value: "< 60", score: "0" },
+        { label: "Jalan Masuk Udara", value: "Baik", score: "0" },
+        { label: "Retraksi", value: "Tidak Ada", score: "0" },
+        { label: "Grunting", value: "Tidak Ada", score: "0" },
+        { label: "Sianosis", value: "Tidak Ada", score: "0" },
+        { label: "Total Nilai & Keterangan", value: "0", score: "" }
+      ];
+
+      // 2 kolom
+      const downColWidth = (pageWidth - 20) / 2;
+
+
+      // Tentukan posisi titik dua agar rata
+      const maxLabelWidth = Math.max(...downScore.map(i => doc.getTextWidth(i.label)));
+      const colonPos = 10 + maxLabelWidth + 2; // posisi titik dua setelah label
+      const valuePos = colonPos + 3; // setelah ": "
+
+      downScore.forEach((item, i) => {
+        sectionY = checkAddPage(doc, sectionY);
+
+        const xBase = (i % 2 === 0) ? 10 : 10 + downColWidth;
+
+        doc.text(item.label, xBase, sectionY);
+
+        doc.text(":", xBase + (colonPos - 10), sectionY);
+
+        doc.text(item.value, xBase + (valuePos - 10), sectionY);
+
+        if (item.score !== "") {
+          const scoreX = xBase + (valuePos - 10) + doc.getTextWidth(item.value) + 6;
+          doc.text(item.score, scoreX, sectionY);
+        }
+
+        if (i % 2 === 1) sectionY += 6;
+      });
+
+      sectionY += 4;
+
+      // === TANDA TANDA VITAL ===
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.text("Tanda Tanda Vital:", 10, sectionY);
+      sectionY += 6;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+
+      // Data
+      const vital = [
+        { label: "Nadi", value: "135 x/menit" },
+        { label: "RR", value: "52 x/menit" },
+        { label: "Suhu", value: "36.7 °C" },
+        { label: "Saturasi O₂", value: "" }
+      ];
+
+      const maxVitalLabelWidth = Math.max(...vital.map(v => doc.getTextWidth(v.label)));
+
+      const vitalColWidth = (pageWidth - 20) / 4;
+
+      let posX = 10;
+
+      vital.forEach(item => {
+        doc.text(item.label, posX, sectionY);
+
+        const colonX = posX + maxVitalLabelWidth + 1;
+        doc.text(":", colonX, sectionY);
+
+        doc.text(item.value, colonX + 4, sectionY);
+
+        posX += vitalColWidth;
+      });
+
+      sectionY += 8;
+      sectionY = checkAddPage(doc, sectionY);
+
+// === ANTROPOMETRI ===
 doc.setFont("helvetica", "bold");
-doc.setFontSize(10);
-doc.text("Down Score:", 10, sectionY);
-sectionY += 8;
+doc.setFontSize(9);
+doc.text("Antropometri:", 10, sectionY);
+sectionY += 6;
 
 doc.setFont("helvetica", "normal");
 doc.setFontSize(9);
 
-const downScore = [
-  { label: "Frekuensi Nafas", value: "< 60", score: "0" },
-  { label: "Jalan Masuk Udara", value: "Baik", score: "0" },
-  { label: "Retraksi", value: "Tidak Ada", score: "0" },
-  { label: "Grunting", value: "Tidak Ada", score: "0" },
-  { label: "Sianosis", value: "Tidak Ada", score: "0" },
-  { label: "Total Nilai & Keterangan", value: "0", score: "" }
+const antropometri = [
+  { label: "Berat Badan", value: "3300 gram" },
+  { label: "Panjang Badan", value: "48 cm" },
+  { label: "Lingkar Kepala", value: "33 cm" },
+  { label: "Lingkar Dada", value: "" } // kosong sesuai contoh
 ];
 
-// 2 kolom
-const downColWidth = (pageWidth - 20) / 2; 
+// cari label terpanjang dulu
+const maxAntLabelWidth = Math.max(...antropometri.map(a => doc.getTextWidth(a.label)));
+
+// kolom 4 seperti sebelumnya (hindari redeclare colWidth)
+const antColWidth = (pageWidth - 20) / 4;
+
+let antX = 10;
+
+antropometri.forEach(item => {
+  // label
+  doc.text(item.label, antX, sectionY);
+
+  // titik dua mepet label
+  const colonX = antX + maxAntLabelWidth + 1;
+  doc.text(":", colonX, sectionY);
+
+  // value offset 4px
+  doc.text(item.value, colonX + 4, sectionY);
+
+  // pindah ke kolom berikutnya
+  antX += antColWidth;
+});
+
+sectionY += 8;
+sectionY = checkAddPage(doc, sectionY);
 
 
-// Tentukan posisi titik dua agar rata
-const maxLabelWidth = Math.max(...downScore.map(i => doc.getTextWidth(i.label)));
-const colonPos = 10 + maxLabelWidth + 2; // posisi titik dua setelah label
-const valuePos = colonPos + 3; // setelah ": "
+// === STATUS KELAINAN ===
+doc.setFont("helvetica", "bold");
+doc.setFontSize(9);
+doc.text("Status Kelainan:", 10, sectionY);
+sectionY += 6;
 
-downScore.forEach((item, i) => {
+doc.setFont("helvetica", "normal");
+doc.setFontSize(9);
+
+// Data Status Kelainan (dummy)
+const statusKelainan = [
+  { lLabel: "Kondisi Umum", lValue: "Normal", rLabel: "Thorax", rValue: "Normal" },
+  { lLabel: "Kulit", lValue: "Normal", rLabel: "Abdomen", rValue: "Normal" },
+  { lLabel: "Kepala", lValue: "Normal", rLabel: "Genitalia", rValue: "Normal" },
+  { lLabel: "Mata", lValue: "Normal", rLabel: "Anus", rValue: "Normal" },
+  { lLabel: "Telinga", lValue: "Normal", rLabel: "Muskuloskeletal", rValue: "Normal" },
+  { lLabel: "Hidung", lValue: "Normal", rLabel: "Ekstrimitas", rValue: "Normal" },
+  { lLabel: "Mulut", lValue: "Normal", rLabel: "Paru", rValue: "Normal" },
+  { lLabel: "Tenggorokan", lValue: "Normal", rLabel: "Refleks Primitif", rValue: "Normal" },
+  { lLabel: "Leher", lValue: "Normal", rLabel: "Lainnya", rValue: "" }
+];
+
+// hitung lebar label paling panjang (kiri & kanan)
+const maxLeftLabelW = Math.max(...statusKelainan.map(row => doc.getTextWidth(row.lLabel)));
+const maxRightLabelW = Math.max(...statusKelainan.map(row => doc.getTextWidth(row.rLabel)));
+
+// posisi kolom
+const leftStartX = 10;
+const leftValueXs = leftStartX + maxLeftLabelW + 5;
+
+const rightStartX = pageWidth / 2 + 5;
+const rightValueXs = rightStartX + maxRightLabelW + 5;
+
+statusKelainan.forEach(row => {
+  // kiri
+  doc.setFont("helvetica", "normal");
+  doc.text(row.lLabel, leftStartX, sectionY);
+  doc.setFont("helvetica", "bold");
+  doc.text(": " + row.lValue, leftValueXs, sectionY);
+
+  // kanan
+  doc.setFont("helvetica", "normal");
+  doc.text(row.rLabel, rightStartX, sectionY);
+  doc.setFont("helvetica", "bold");
+  doc.text(": " + row.rValue, rightValueXs, sectionY);
+
+  sectionY += 6;
+  sectionY = checkAddPage(doc, sectionY);
+});
+
+sectionY += 8;
+doc.setFont("helvetica", "bold");
+doc.setFontSize(10);
+doc.text("III. PEMERIKSAAN REGIONAL / KHUSUS / TAMBAHAN", 10, sectionY);
+sectionY += 2;
+
+const tableStartXs = 10;
+const tableWidths = pageWidth - 20; 
+const rowHeights = 20; 
+
+doc.rect(tableStartXs, sectionY, tableWidths, rowHeights);
+
+doc.setFont("helvetica", "normal");
+doc.setFontSize(9);
+doc.text("Keterangan :", tableStartXs + 4, sectionY + 6);
+
+sectionY += rowHeights + 8;
+sectionY = checkAddPage(doc, sectionY);
+
+// === IV. PEMERIKSAAN PENUNJANG ===
+sectionY += 4;
+doc.setFont("helvetica", "bold");
+doc.setFontSize(10);
+doc.text("IV. PEMERIKSAAN PENUNJANG", 10, sectionY);
+sectionY += 4;
+
+const penunjang = [
+  { label: "Lab", value: "Hb: 13 g/dL, Leukosit: 12.000/mm3" },
+  { label: "Radiologi", value: "Thorax: Normal" },
+  { label: "Penunjang Lainnya", value: "USG: Normal" },
+];
+
+const margin = 10;
+const tableWidthw = pageWidth - margin * 2; // full page dengan margin
+const labelWidth = tableWidthw / 3;         // 1/3 untuk label
+const valueWidth = (tableWidthw / 3) * 2;   // 2/3 untuk value
+const rowHeightw = 8;
+
+doc.setFont("helvetica", "normal");
+doc.setFontSize(9);
+
+penunjang.forEach(item => {
+  // check page break
   sectionY = checkAddPage(doc, sectionY);
 
-  const xBase = (i % 2 === 0) ? 10 : 10 + downColWidth; // kolom kiri / kanan
+  // Gambar kotak label
+  doc.rect(margin, sectionY, labelWidth, rowHeightw);
+  doc.setFont("helvetica", "bold");
+  doc.text(item.label, margin + 2, sectionY + 5);
 
-  // label
-  doc.text(item.label, xBase, sectionY);
+  // Gambar kotak value
+  doc.rect(margin + labelWidth, sectionY, valueWidth, rowHeightw);
+  doc.setFont("helvetica", "normal");
+  // Wrap text jika panjang
+  const splitValue = doc.splitTextToSize(item.value, valueWidth - 4);
+  doc.text(splitValue, margin + labelWidth + 2, sectionY + 5);
 
-  // titik dua
-  doc.text(":", xBase + (colonPos - 10), sectionY);
-
-  // value
-  doc.text(item.value, xBase + (valuePos - 10), sectionY);
-
-  // score opsional
-  if (item.score !== "") {
-    const scoreX = xBase + (valuePos - 10) + doc.getTextWidth(item.value) + 6;
-    doc.text(item.score, scoreX, sectionY);
-  }
-
-  // pindah baris hanya jika kolom kanan
-  if (i % 2 === 1) sectionY += 6;
+  sectionY += rowHeightw;
 });
 
 sectionY += 4;
+
+doc.setFont("helvetica", "bold");
+doc.setFontSize(10);
+doc.text("V. PEMERIKSAAN REGIONAL / KHUSUS / TAMBAHAN", 10, sectionY);
+sectionY += 2;
+
+const tab = 10;
+const tw = pageWidth - 20; 
+const rw = 15; 
+
+doc.rect(tab, sectionY, tw, rw);
+
+doc.setFont("helvetica", "normal");
+doc.setFontSize(9);
+doc.text("ASFIKSIA BERAT SUSP NEO PNEUMONIA DD HMD NEO BBLC CB SMK SPT", tab + 4, sectionY + 6);
+
+sectionY += rw + 8;
+sectionY = checkAddPage(doc, sectionY);
+
+sectionY += 4;
+
+doc.setFont("helvetica", "bold");
+doc.setFontSize(10);
+doc.text("VI. TATALAKSANA", 10, sectionY);
+sectionY += 2;
+
+const tabs = 10;
+const tweight = pageWidth - 20; 
+const row = 15; 
+
+doc.rect(tabs, sectionY, tweight, row);
+
+doc.setFont("helvetica", "normal");
+doc.setFontSize(9);
+doc.text("ASFIKSIA BERAT SUSP NEO PNEUMONIA DD HMD NEO BBLC CB SMK SPT", tabs + 4, sectionY + 6);
+
+sectionY += row + 8;
+sectionY = checkAddPage(doc, sectionY);
+
+
+sectionY += 4;
+
+doc.setFont("helvetica", "bold");
+doc.setFontSize(10);
+doc.text("VII. EDUKASI", 10, sectionY);
+sectionY += 2;
+
+const tabb = 10;
+const tww = pageWidth - 20; 
+const rww = 15; 
+
+doc.rect(tabb, sectionY, tww, rww);
+
+doc.setFont("helvetica", "normal");
+doc.setFontSize(9);
+doc.text("ASFIKSIA BERAT SUSP NEO PNEUMONIA DD HMD NEO BBLC CB SMK SPT", tabb + 4, sectionY + 6);
+
+sectionY += rww + 8;
+sectionY = checkAddPage(doc, sectionY);
+
+
+// === Dokter Penanggung Jawab & QRCode ===
+sectionY += 10;
+
+const qrSize = 30; 
+const marginRight = 10; 
+const qrX = pageWidth - qrSize - marginRight; 
+const qrY = sectionY;
+
+doc.setFont("helvetica", "bold");
+doc.setFontSize(9);
+doc.text("Dokter Penanggung Jawab", qrX + qrSize / 2, qrY, { align: "center" });
+
+
+doc.addImage(qrDataUrl, "PNG", qrX, qrY, qrSize, qrSize);
+
+doc.setFont("helvetica", "normal");
+doc.setFontSize(9);
+doc.text("dr. Dyah Ariyantini, Sp. OG.", qrX + qrSize / 2, qrY + qrSize + 2, { align: "center" });
+
+// Update sectionY
+sectionY = qrY + qrSize + 18;
+
 
 
 
