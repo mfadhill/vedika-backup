@@ -14,6 +14,8 @@ import KlaimRalanPage from "./components/pasien/KlaimRalan";
 import KlaimRanapPage from "./components/pasien/KlaimRanap";
 import Login from "./pages/auth/login";
 import BerkasRalan from "./pages/BerkasRalan";
+import UploadBerkas from "./pages/UploadBerkas";
+import LogKirimBerkas from "./pages/LogKirimBerkas";
 
 function AppLayout() {
   const location = useLocation();
@@ -33,6 +35,8 @@ function AppLayout() {
           <Route path="/ranap" element={<RanapPage />} />
           <Route path="/ralan" element={<RalanPage />} />
           <Route path="/pasien" element={<DaftarPasien />} />
+          <Route path="/upload_berkas" element={<UploadBerkas />} />
+          <Route path="/kirim_berkas" element={<LogKirimBerkas />} />
           <Route path="/ralan/klaim/:no_rawat" element={<KlaimRalanPage />} />
           <Route path="/ranap/klaim/:no_rawat" element={<KlaimRanapPage />} />
           <Route path="/ranap/berkas/:no_rawat" element={<BerkasRanap />} />

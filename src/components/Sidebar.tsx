@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { RiComputerLine } from "react-icons/ri";
 import { FiHome, FiFileText, FiLogOut } from "react-icons/fi";
+import { FiUploadCloud } from "react-icons/fi";
+
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -141,19 +143,32 @@ const Sidebar = () => {
                     <span>Berkas Ranap (Baru)</span>
                   </Link>
                 </li>
-                {/* <li>
+                <li>
                   <Link
-                    to="/pasien"
-                    className={`flex items-center gap-2 p-2 rounded cursor-pointer transition hover:bg-blue-100 hover:text-blue-600 ${activeSubmenu === "idrg"
+                    to="/upload_berkas"
+                    className={`flex items-center gap-2 p-2 rounded cursor-pointer transition hover:bg-blue-100 hover:text-blue-600 ${activeSubmenu === "uploadBerkas"
                       ? "bg-blue-200 text-blue-700 font-semibold"
                       : ""
                       }`}
-                    onClick={() => setActiveSubmenu("idrg")}
+                    onClick={() => setActiveSubmenu("uploadBerkas")}
                   >
-                    <FiFileText size={18} />
-                    <span>IDRG </span>
+                    <FiUploadCloud size={18} />
+                    <span>Upload Berkas </span>
                   </Link>
-                </li> */}
+                </li>
+                <li>
+                  <Link
+                    to="/kirim_berkas"
+                    className={`flex items-center gap-2 p-2 rounded cursor-pointer transition hover:bg-blue-100 hover:text-blue-600 ${activeSubmenu === "logKirim"
+                      ? "bg-blue-200 text-blue-700 font-semibold"
+                      : ""
+                      }`}
+                    onClick={() => setActiveSubmenu("logKirim")}
+                  >
+                    <FiUploadCloud size={18} />
+                    <span>Log Kirim Berkas</span>
+                  </Link>
+                </li>
               </ul>
             </div>
           )}
